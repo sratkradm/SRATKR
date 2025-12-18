@@ -1,0 +1,8 @@
+{
+  "name": "sra-tkr-website",
+  "version": "1.0.0",
+  "description": "Laman Web Rasmi SRA TKR",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
+  }
+}
