@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SRA Taman Kajang Raya - Laman Rasmi</title>
+    
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Supabase JS Client (CDN) - DITAMBAH -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Konfigurasi Warna Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sra: {
+                            primary: '#004D40', // Hijau Gelap
+                            accent: '#FFC107',  // Emas Lembut
+                            light: '#F5F5F5',   // Putih/Krem
+                            dark: '#1F2937'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-50 font-sans text-gray-800">
+
+    <!-- HEADER & NAVIGASI -->
+    <header class="bg-sra-primary text-white sticky top-0 z-50 shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                
+                <!-- Logo -->
+                <a href="#" class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-sra-primary font-bold border-2 border-sra-accent">
+                        <i class="fas fa-mosque fa-lg"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold leading-tight">SRA TAMAN KAJANG RAYA</h1>
+                        <p class="text-xs text-sra-accent">Berilmu, Beriman, Beramal</p>
+                    </div>
+                </a>
+
+                <!-- Desktop Nav -->
+                <nav class="hidden md:flex space-x-6 items-center">
+                    <a href="#" class="hover:text-sra-accent transition font-medium">Utama</a>
+                    <a href="#" class="hover:text-sra-accent transition font-medium">Mengenai Kami</a>
+                    <a href="#" class="hover:text-sra-accent transition font-medium">Akademik</a>
+                    <a href="#" class="hover:text-sra-accent transition font-medium">HEM</a>
+                    <a href="#galeri" class="hover:text-sra-accent transition font-medium">Galeri</a>
+                    <a href="#footer" class="bg-sra-accent text-sra-primary px-4 py-2 rounded-md font-bold hover:bg-yellow-400 transition">Hubungi Kami</a>
+                </nav>
+
+                <!-- Mobile Hamburger -->
+                <button id="mobile-menu-btn" class="md:hidden text-white focus:outline-none">
+                    <i class="fas fa-bars fa-2x"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-sra-primary border-t border-teal-800">
+            <div class="flex flex-col p-4 space-y-3">
+                <a href="#" class="block py-2 border-b border-teal-800">Utama</a>
+                <a href="#" class="block py-2 border-b border-teal-800">Mengenai Kami</a>
+                <a href="#" class="block py-2 border-b border-teal-800">Akademik</a>
+                <a href="#" class="block py-2 text-sra-accent font-bold">Hubungi Kami</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="relative h-[500px] flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <img src="https://placehold.co/1920x800/004D40/FFFFFF?text=Bangunan+Sekolah+SRA" alt="Sekolah Background" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-r from-sra-primary/90 to-sra-primary/40"></div>
+        </div>
+        <div class="relative z-10 container mx-auto px-4 text-center">
+            <span class="inline-block bg-sra-accent text-sra-primary px-3 py-1 rounded-full text-sm font-bold mb-4 animate-fade-in-up">
+                Selamat Datang ke SRATKR
+            </span>
+            <h2 class="text-4xl md:text-6xl font-bold text-white mb-6 drop-shadow-lg">
+                Membina Generasi <br><span class="text-sra-accent">Cemerlang</span>
+            </h2>
+            <div class="bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-lg max-w-2xl mx-auto mt-8">
+                <p class="text-yellow-100 font-semibold mb-2"><i class="fas fa-bullhorn mr-2"></i> PENGUMUMAN TERKINI</p>
+                <div id="announcement-slider" class="text-white text-lg h-8 transition-opacity duration-500">
+                    Selamat Datang ke Laman Web Rasmi Sekolah
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- QUICK ACCESS SECTION -->
+    <section class="py-12 -mt-16 relative z-20">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <!-- Card 1 -->
+                <div class="bg-white p-6 rounded-lg shadow-xl border-b-4 border-sra-primary hover:-translate-y-2 transition flex flex-col items-center text-center">
+                    <i class="far fa-calendar-alt fa-2x text-sra-primary mb-3"></i>
+                    <h3 class="font-bold">Takwim</h3>
+                </div>
+                <!-- Card 2 -->
+                <div class="bg-white p-6 rounded-lg shadow-xl border-b-4 border-sra-accent hover:-translate-y-2 transition flex flex-col items-center text-center">
+                    <i class="fas fa-phone-alt fa-2x text-sra-accent mb-3"></i>
+                    <h3 class="font-bold">Hubungi</h3>
+                </div>
+                <!-- Card 3 -->
+                <div class="bg-white p-6 rounded-lg shadow-xl border-b-4 border-sra-primary hover:-translate-y-2 transition flex flex-col items-center text-center">
+                    <i class="fas fa-book-open fa-2x text-sra-primary mb-3"></i>
+                    <h3 class="font-bold">PSRA</h3>
+                </div>
+                <!-- Card 4 -->
+                <div class="bg-white p-6 rounded-lg shadow-xl border-b-4 border-sra-accent hover:-translate-y-2 transition flex flex-col items-center text-center">
+                    <i class="fas fa-user-plus fa-2x text-sra-accent mb-3"></i>
+                    <h3 class="font-bold">Daftar</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BERITA TERKINI SECTION (SUPABASE INTEGRATION) -->
+    <section class="py-16 bg-sra-light">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-end mb-10">
+                <div>
+                    <h2 class="text-3xl font-bold text-sra-primary">Berita Terkini</h2>
+                    <p class="text-gray-600 mt-2">Perkembangan semasa dari Database</p>
+                </div>
+            </div>
+
+            <!-- CONTAINER BERITA (Akan diisi oleh script.js) -->
+            <div id="news-container" class="grid md:grid-cols-3 gap-8 min-h-[300px]">
+                <!-- Loading State / Placeholder -->
+                <div class="col-span-1 md:col-span-3 text-center py-10">
+                    <i class="fas fa-spinner fa-spin fa-3x text-sra-primary"></i>
+                    <p class="mt-4 text-gray-500">Sedang memuat turun berita...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="footer" class="bg-sra-primary text-gray-300 pt-16 pb-8">
+        <div class="container mx-auto px-4 text-center">
+            <p>&copy; 2025 Sekolah Rendah Agama Taman Kajang Raya.</p>
+        </div>
+    </footer>
+
+    <!-- Script Utama -->
+    <script src="script.js"></script>
+</body>
+</html>
