@@ -8,9 +8,6 @@
     <!-- Tailwind CSS (CDN) -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Supabase JS Client (CDN) - DITAMBAH -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
     <!-- Konfigurasi Warna Tailwind -->
     <script>
         tailwind.config = {
@@ -135,19 +132,19 @@
         </div>
     </section>
 
-    <!-- BERITA TERKINI SECTION (SUPABASE INTEGRATION) -->
+    <!-- BERITA TERKINI SECTION -->
     <section class="py-16 bg-sra-light">
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-end mb-10">
                 <div>
                     <h2 class="text-3xl font-bold text-sra-primary">Berita Terkini</h2>
-                    <p class="text-gray-600 mt-2">Perkembangan semasa dari Database</p>
+                    <p class="text-gray-600 mt-2">Perkembangan semasa sekolah</p>
                 </div>
             </div>
 
-            <!-- CONTAINER BERITA (Akan diisi oleh script.js) -->
+            <!-- CONTAINER BERITA -->
             <div id="news-container" class="grid md:grid-cols-3 gap-8 min-h-[300px]">
-                <!-- Loading State / Placeholder -->
+                <!-- Loading Placeholder -->
                 <div class="col-span-1 md:col-span-3 text-center py-10">
                     <i class="fas fa-spinner fa-spin fa-3x text-sra-primary"></i>
                     <p class="mt-4 text-gray-500">Sedang memuat turun berita...</p>
@@ -159,7 +156,14 @@
     <!-- FOOTER -->
     <footer id="footer" class="bg-sra-primary text-gray-300 pt-16 pb-8">
         <div class="container mx-auto px-4 text-center">
-            <p>&copy; 2025 Sekolah Rendah Agama Taman Kajang Raya.</p>
+            <div class="mb-4">
+                <i class="fas fa-mosque fa-2x text-sra-accent mb-2"></i>
+                <h3 class="text-white font-bold text-lg">SRA Taman Kajang Raya</h3>
+            </div>
+            <p class="text-sm mb-4">Jalan TKR 1/1, Taman Kajang Raya, 43000 Kajang, Selangor.</p>
+            <div class="border-t border-teal-800 pt-8 text-xs">
+                <p>&copy; 2025 Sekolah Rendah Agama Taman Kajang Raya. Hak Cipta Terpelihara.</p>
+            </div>
         </div>
     </footer>
 
