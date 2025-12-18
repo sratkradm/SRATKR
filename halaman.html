@@ -4,30 +4,90 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SRA Taman Kajang Raya</title>
+    
+    <!-- Tailwind CSS (CDN) -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Konfigurasi Warna -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        sra: { primary: '#004D40', accent: '#FFC107', light: '#F5F5F5', dark: '#1F2937' }
+                        sra: {
+                            primary: '#004D40', 
+                            accent: '#FFC107', 
+                            light: '#F5F5F5',   
+                            dark: '#1F2937'
+                        }
                     },
-                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
                 }
             }
         }
     </script>
+
+    <!-- Google Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
+
+    <!-- CSS KHAS UNTUK CONTENT DATABASE -->
+    <!-- Ini akan memastikan HTML dari database (h3, p, ul) nampak cantik -->
+    <style>
+        #page-body h3 {
+            font-size: 1.5rem;      /* Saiz Tajuk (text-2xl) */
+            font-weight: 700;       /* Tebal */
+            color: #004D40;         /* Warna Hijau Sekolah */
+            margin-top: 2rem;       /* Jarak atas */
+            margin-bottom: 0.75rem; /* Jarak bawah */
+            line-height: 1.3;
+        }
+
+        #page-body p {
+            margin-bottom: 1.25rem; /* Jarak antara perenggan */
+            line-height: 1.8;       /* Jarak baris (mudah baca) */
+            text-align: justify;    /* Kiri kanan rata */
+            color: #374151;         /* Warna kelabu gelap */
+        }
+
+        #page-body ul {
+            list-style-type: disc;  /* Bullet points */
+            margin-left: 1.5rem;    /* Indent ke dalam */
+            margin-bottom: 1.5rem;
+            color: #374151;
+        }
+
+        #page-body ol {
+            list-style-type: decimal; /* Nombor 1. 2. 3. */
+            margin-left: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #374151;
+        }
+
+        #page-body li {
+            margin-bottom: 0.5rem;  /* Jarak item list */
+            padding-left: 0.5rem;
+        }
+        
+        #page-body strong {
+            font-weight: 700;
+            color: #004D40;
+        }
+    </style>
 </head>
 <body class="bg-gray-50 font-sans text-gray-800 flex flex-col min-h-screen">
 
-    <!-- HEADER (Copy sebiji dari index.html supaya konsisten) -->
-    <!-- Nota: Untuk production sebenar, kita guna component, tapi untuk vanilla JS, copy paste adalah cara standard -->
+    <!-- 1. HEADER & NAVIGASI (Sama seperti index.html) -->
     <header class="bg-sra-primary text-white sticky top-0 z-50 shadow-lg border-b-4 border-sra-accent">
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center py-4">
+                
+                <!-- Logo -->
                 <a href="index.html" class="flex items-center space-x-3">
                     <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-sra-primary font-bold border-2 border-sra-accent">
                         <i class="fas fa-mosque"></i>
@@ -36,11 +96,91 @@
                         <h1 class="text-md font-bold uppercase tracking-wide">SRA Taman Kajang Raya</h1>
                     </div>
                 </a>
+
+                <!-- Desktop Nav -->
+                <nav class="hidden lg:flex space-x-8 items-center text-sm font-medium">
+                    <a href="index.html" class="hover:text-sra-accent transition">Utama</a>
+
+                    <!-- Dropdown: Mengenai Kami -->
+                    <div class="relative group h-full flex items-center">
+                        <button class="flex items-center gap-1 hover:text-sra-accent focus:outline-none py-4">
+                            Mengenai Kami <i class="fas fa-chevron-down text-[10px] ml-1 opacity-70"></i>
+                        </button>
+                        <div class="absolute top-full left-0 w-48 bg-white text-gray-800 shadow-xl rounded-b-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top pt-2">
+                            <a href="halaman.html?topik=sejarah" class="block px-4 py-2 hover:bg-gray-100 border-b border-gray-100">Sejarah Sekolah</a>
+                            <a href="halaman.html?topik=carta" class="block px-4 py-2 hover:bg-gray-100 border-b border-gray-100">Carta Organisasi</a>
+                            <a href="halaman.html?topik=piagam" class="block px-4 py-2 hover:bg-gray-100 text-sra-primary">Piagam Pelanggan</a>
+                        </div>
+                    </div>
+
+                    <!-- Dropdown: Akademik -->
+                    <div class="relative group h-full flex items-center">
+                        <button class="flex items-center gap-1 hover:text-sra-accent focus:outline-none py-4">
+                            Akademik <i class="fas fa-chevron-down text-[10px] ml-1 opacity-70"></i>
+                        </button>
+                        <div class="absolute top-full left-0 w-48 bg-white text-gray-800 shadow-xl rounded-b-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top pt-2">
+                            <a href="halaman.html?topik=kurikulum" class="block px-4 py-2 hover:bg-gray-100 border-b border-gray-100">Kurikulum</a>
+                            <a href="halaman.html?topik=jadual" class="block px-4 py-2 hover:bg-gray-100 border-b border-gray-100">Jadual Waktu</a>
+                            <a href="halaman.html?topik=pencapaian" class="block px-4 py-2 hover:bg-gray-100 text-sra-primary">Pencapaian</a>
+                        </div>
+                    </div>
+
+                    <!-- Dropdown: HEM -->
+                    <div class="relative group h-full flex items-center">
+                        <button class="flex items-center gap-1 hover:text-sra-accent focus:outline-none py-4">
+                            HEM <i class="fas fa-chevron-down text-[10px] ml-1 opacity-70"></i>
+                        </button>
+                        <div class="absolute top-full left-0 w-48 bg-white text-gray-800 shadow-xl rounded-b-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top pt-2">
+                            <a href="halaman.html?topik=disiplin" class="block px-4 py-2 hover:bg-gray-100 border-b border-gray-100">Disiplin</a>
+                            <a href="halaman.html?topik=bimbingan" class="block px-4 py-2 hover:bg-gray-100 border-b border-gray-100">Unit Bimbingan</a>
+                            <a href="halaman.html?topik=kebajikan" class="block px-4 py-2 hover:bg-gray-100 text-sra-primary">Kebajikan</a>
+                        </div>
+                    </div>
+
+                    <a href="index.html#galeri" class="hover:text-sra-accent transition">Galeri</a>
+                    <a href="index.html#footer" class="bg-sra-accent text-sra-primary px-5 py-2 rounded font-bold hover:bg-yellow-400 transition shadow-md">Hubungi Kami</a>
+                </nav>
+
+                <!-- Mobile Hamburger -->
+                <button id="mobile-menu-btn" class="lg:hidden text-white focus:outline-none">
+                    <i class="fas fa-bars fa-2x"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-sra-primary border-t border-teal-800 max-h-[80vh] overflow-y-auto">
+            <div class="flex flex-col p-4 space-y-1">
+                <a href="index.html" class="block py-3 border-b border-teal-800 font-bold">Utama</a>
                 
-                <!-- Butang Balik ke Utama (Untuk Mobile/Desktop) -->
-                <a href="index.html" class="text-white hover:text-sra-accent font-medium">
-                    <i class="fas fa-home mr-2"></i> Kembali ke Utama
-                </a>
+                <div class="border-b border-teal-800 py-2">
+                    <p class="text-sra-accent text-sm font-bold uppercase mb-2">Mengenai Kami</p>
+                    <div class="pl-4 flex flex-col space-y-2 text-sm text-gray-200">
+                        <a href="halaman.html?topik=sejarah">Sejarah Sekolah</a>
+                        <a href="halaman.html?topik=carta">Carta Organisasi</a>
+                        <a href="halaman.html?topik=piagam">Piagam Pelanggan</a>
+                    </div>
+                </div>
+
+                <div class="border-b border-teal-800 py-2">
+                    <p class="text-sra-accent text-sm font-bold uppercase mb-2">Akademik</p>
+                    <div class="pl-4 flex flex-col space-y-2 text-sm text-gray-200">
+                        <a href="halaman.html?topik=kurikulum">Kurikulum</a>
+                        <a href="halaman.html?topik=jadual">Jadual Waktu</a>
+                        <a href="halaman.html?topik=pencapaian">Pencapaian</a>
+                    </div>
+                </div>
+
+                <div class="border-b border-teal-800 py-2">
+                    <p class="text-sra-accent text-sm font-bold uppercase mb-2">HEM</p>
+                    <div class="pl-4 flex flex-col space-y-2 text-sm text-gray-200">
+                        <a href="halaman.html?topik=disiplin">Disiplin</a>
+                        <a href="halaman.html?topik=bimbingan">Unit Bimbingan</a>
+                        <a href="halaman.html?topik=kebajikan">Kebajikan</a>
+                    </div>
+                </div>
+                
+                <a href="index.html#footer" class="block py-3 text-sra-accent font-bold mt-2">Hubungi Kami</a>
             </div>
         </div>
     </header>
@@ -55,47 +195,125 @@
         </div>
 
         <!-- Content Container (Hidden by default) -->
-        <div id="content-area" class="hidden max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg min-h-[400px]">
-            <!-- Tajuk -->
-            <h1 id="page-title" class="text-3xl md:text-4xl font-bold text-sra-primary mb-6 border-b-2 border-sra-accent pb-4 inline-block">
+        <div id="content-area" class="hidden max-w-4xl mx-auto bg-white p-6 md:p-10 rounded-lg shadow-xl min-h-[400px] border-t-4 border-sra-primary">
+            
+            <!-- Breadcrumb (Navigasi Kecil) -->
+            <div class="text-sm text-gray-500 mb-6">
+                <a href="index.html" class="hover:text-sra-primary">Utama</a> 
+                <span class="mx-2">/</span> 
+                <span id="breadcrumb-title" class="text-sra-primary font-bold">...</span>
+            </div>
+
+            <!-- Tajuk Halaman -->
+            <h1 id="page-title" class="text-3xl md:text-4xl font-bold text-sra-primary mb-8 border-b-2 border-sra-accent pb-4 inline-block">
                 <!-- Tajuk akan masuk sini -->
             </h1>
 
             <!-- Gambar (Optional) -->
-            <img id="page-image" src="" class="w-full h-64 object-cover rounded-lg mb-8 hidden shadow-md">
+            <img id="page-image" src="" class="w-full h-64 md:h-80 object-cover rounded-lg mb-8 hidden shadow-md">
 
-            <!-- Isi Kandungan -->
-            <!-- 'prose' adalah class untuk formatting teks panjang -->
-            <div id="page-body" class="prose prose-lg max-w-none text-gray-700 leading-relaxed space-y-4">
-                <!-- HTML dari database akan masuk sini -->
+            <!-- Isi Kandungan (Dari Supabase) -->
+            <div id="page-body">
+                <!-- HTML dari database akan masuk sini dan distyle oleh CSS di head -->
             </div>
         </div>
 
         <!-- Error State -->
-        <div id="error-msg" class="hidden text-center py-20">
-            <i class="fas fa-exclamation-circle fa-3x text-red-500"></i>
-            <h2 class="text-2xl font-bold mt-4 text-gray-800">Halaman Tidak Dijumpai</h2>
-            <p class="text-gray-600 mt-2">Maaf, kandungan yang anda cari tidak wujud atau sedang dikemaskini.</p>
-            <a href="index.html" class="inline-block mt-6 bg-sra-primary text-white px-6 py-2 rounded hover:bg-teal-800 transition">Kembali</a>
+        <div id="error-msg" class="hidden text-center py-20 bg-white rounded-lg shadow max-w-2xl mx-auto">
+            <i class="fas fa-exclamation-circle fa-3x text-red-500 mb-4"></i>
+            <h2 class="text-2xl font-bold text-gray-800">Halaman Tidak Dijumpai</h2>
+            <p class="text-gray-600 mt-2 mb-6">Maaf, kandungan yang anda cari belum dimasukkan atau pautan rosak.</p>
+            <a href="index.html" class="inline-block bg-sra-primary text-white px-6 py-2 rounded hover:bg-teal-800 transition">Kembali ke Utama</a>
         </div>
 
     </main>
 
     <!-- FOOTER (Sama seperti index.html) -->
-    <footer class="bg-sra-primary text-gray-100 border-t-4 border-sra-accent pt-8 pb-8 text-center">
-        <p>&copy; 2025 SRA Taman Kajang Raya.</p>
+    <footer id="footer" class="bg-sra-primary text-gray-100 border-t-4 border-sra-accent pt-16 pb-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
+                
+                <!-- Info Sekolah -->
+                <div class="flex flex-col items-start">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-sra-primary">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-sra-accent leading-none">SRA TAMAN</h3>
+                            <h3 class="font-bold text-sra-accent leading-none">KAJANG RAYA</h3>
+                        </div>
+                    </div>
+                    <p class="text-sm leading-relaxed text-gray-300">
+                        Melahirkan modal insan cemerlang dunia dan akhirat.
+                    </p>
+                </div>
+
+                <!-- Hubungi -->
+                <div>
+                    <h4 class="text-lg font-bold text-white mb-5 border-b border-teal-800 pb-2 inline-block">Hubungi</h4>
+                    <ul class="space-y-4 text-sm text-gray-300">
+                        <li class="flex items-start gap-3">
+                            <i class="fas fa-map-marker-alt text-sra-accent mt-1"></i>
+                            <span>Jalan TKR 1/1, Taman Kajang Raya<br>43000 Kajang, Selangor.</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-phone-alt text-sra-accent"></i>
+                            <span>+603-8733 XXXX</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="far fa-envelope text-sra-accent"></i>
+                            <span>info@sratkr.edu.my</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Pautan -->
+                <div>
+                    <h4 class="text-lg font-bold text-white mb-5 border-b border-teal-800 pb-2 inline-block">Pautan</h4>
+                    <ul class="space-y-3 text-sm text-gray-300">
+                        <li>
+                            <a href="https://www.jais.gov.my/" target="_blank" class="hover:text-sra-accent transition flex items-center gap-2">
+                                <i class="fas fa-external-link-alt text-xs"></i> JAIS
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="hover:text-sra-accent transition flex items-center gap-2">
+                                <i class="fas fa-check-circle text-xs"></i> e-Semakan
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-teal-800 pt-8 text-center text-xs text-gray-400">
+                <p>&copy; 2025 SRA Taman Kajang Raya.</p>
+            </div>
+        </div>
     </footer>
 
-    <!-- LOGIK JAVASCRIPT KHAS UNTUK HALAMAN -->
+    <!-- LOGIK JAVASCRIPT -->
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
-            // 1. Dapatkan parameter 'topik' dari URL (contoh: halaman.html?topik=sejarah)
+            
+            // 1. MENU MOBILE LOGIC (Sama macam index.html)
+            const mobileBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileBtn && mobileMenu) {
+                mobileBtn.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+
+            // 2. FETCH CONTENT LOGIC
+            // Dapatkan parameter 'topik' dari URL (contoh: halaman.html?topik=sejarah)
             const urlParams = new URLSearchParams(window.location.search);
             const slug = urlParams.get('topik');
 
             const loadingEl = document.getElementById('loading');
             const contentEl = document.getElementById('content-area');
             const errorEl = document.getElementById('error-msg');
+            const breadcrumbEl = document.getElementById('breadcrumb-title');
 
             // Jika tiada slug, tunjuk error terus
             if (!slug) {
@@ -105,7 +323,7 @@
             }
 
             try {
-                // 2. Panggil API kita
+                // Panggil API Vercel kita
                 const response = await fetch(`/api/content?slug=${slug}`);
                 
                 if (!response.ok) throw new Error('Data not found');
@@ -114,7 +332,10 @@
 
                 // 3. Masukkan data ke dalam HTML
                 document.getElementById('page-title').innerText = data.title;
-                document.getElementById('page-body').innerHTML = data.content; // Guna innerHTML sebab content mungkin ada <p>, <ul>
+                breadcrumbEl.innerText = data.title;
+                
+                // PENTING: innerHTML akan parse kod HTML yang anda masukkan di database
+                document.getElementById('page-body').innerHTML = data.content; 
 
                 // Handle Gambar (Jika ada)
                 const imgEl = document.getElementById('page-image');
@@ -123,7 +344,7 @@
                     imgEl.classList.remove('hidden');
                 }
 
-                // 4. Tunjuk content, sorok loading
+                // Tunjuk content, sorok loading
                 loadingEl.classList.add('hidden');
                 contentEl.classList.remove('hidden');
                 
