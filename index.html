@@ -173,30 +173,45 @@
         </div>
     </section>
 
-    <!-- 3. QUICK ACCESS SECTION -->
+<!-- 3. QUICK ACCESS SECTION -->
     <section class="py-12 -mt-16 relative z-20">
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <!-- Card 1 -->
-                <div class="bg-white p-6 rounded-lg shadow-xl border-b-4 border-sra-primary hover:-translate-y-2 transition flex flex-col items-center text-center">
-                    <i class="far fa-calendar-alt fa-2x text-sra-primary mb-3"></i>
-                    <h3 class="font-bold">Takwim</h3>
-                </div>
-                <!-- Card 2 -->
-                <div class="bg-white p-6 rounded-lg shadow-xl border-b-4 border-sra-accent hover:-translate-y-2 transition flex flex-col items-center text-center">
-                    <i class="fas fa-phone-alt fa-2x text-sra-accent mb-3"></i>
-                    <h3 class="font-bold">Hubungi</h3>
-                </div>
-                <!-- Card 3 -->
-                <div class="bg-white p-6 rounded-lg shadow-xl border-b-4 border-sra-primary hover:-translate-y-2 transition flex flex-col items-center text-center">
-                    <i class="fas fa-book-open fa-2x text-sra-primary mb-3"></i>
-                    <h3 class="font-bold">PSRA</h3>
-                </div>
-                <!-- Card 4 -->
-                <div class="bg-white p-6 rounded-lg shadow-xl border-b-4 border-sra-accent hover:-translate-y-2 transition flex flex-col items-center text-center">
-                    <i class="fas fa-user-plus fa-2x text-sra-accent mb-3"></i>
-                    <h3 class="font-bold">Daftar</h3>
-                </div>
+                
+                <!-- 1. Takwim (Link ke Halaman Statik) -->
+                <a href="halaman.html?topik=takwim" class="group bg-white p-6 rounded-lg shadow-xl border-b-4 border-sra-primary hover:-translate-y-2 transition duration-300 flex flex-col items-center text-center cursor-pointer">
+                    <div class="mb-3 transition-transform group-hover:scale-110">
+                        <i class="far fa-calendar-alt fa-2x text-sra-primary"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800 group-hover:text-sra-primary transition">Takwim</h3>
+                </a>
+
+                <!-- 2. Hubungi (Link ke WhatsApp) -->
+                <!-- Gantikan nombor telefon di bawah (format: 601xxxxxxxx tanpa + atau -) -->
+                <a href="https://wa.me/60123456789?text=Assalamualaikum+tuan,+saya+ingin+bertanya" target="_blank" class="group bg-white p-6 rounded-lg shadow-xl border-b-4 border-sra-accent hover:-translate-y-2 transition duration-300 flex flex-col items-center text-center cursor-pointer">
+                    <div class="mb-3 transition-transform group-hover:scale-110">
+                        <i class="fas fa-phone-alt fa-2x text-sra-accent"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800 group-hover:text-yellow-600 transition">Hubungi</h3>
+                </a>
+
+                <!-- 3. PSRA (Link ke Halaman Statik) -->
+                <a href="halaman.html?topik=psra" class="group bg-white p-6 rounded-lg shadow-xl border-b-4 border-sra-primary hover:-translate-y-2 transition duration-300 flex flex-col items-center text-center cursor-pointer">
+                    <div class="mb-3 transition-transform group-hover:scale-110">
+                        <i class="fas fa-book-open fa-2x text-sra-primary"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800 group-hover:text-sra-primary transition">PSRA</h3>
+                </a>
+
+                <!-- 4. Daftar (Link Luar / Google Form) -->
+                <!-- Gantikan href dengan link Google Form anda -->
+                <a href="https://docs.google.com/forms" target="_blank" class="group bg-white p-6 rounded-lg shadow-xl border-b-4 border-sra-accent hover:-translate-y-2 transition duration-300 flex flex-col items-center text-center cursor-pointer">
+                    <div class="mb-3 transition-transform group-hover:scale-110">
+                        <i class="fas fa-user-plus fa-2x text-sra-accent"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800 group-hover:text-yellow-600 transition">Daftar</h3>
+                </a>
+
             </div>
         </div>
     </section>
