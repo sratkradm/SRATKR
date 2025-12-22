@@ -1,152 +1,227 @@
-// Variable Global untuk simpan data berita
+/**
+ * script.js
+ * Logik Frontend untuk Laman Web SRA Taman Kajang Raya
+ */
+
+// Variable Global untuk simpan data berita (supaya boleh dibaca oleh Modal)
 let allNewsData = [];
 
 document.addEventListener('DOMContentLoaded', () => {
     
-    // ==========================================
-    // 1. FETCH BERITA DARI VERCEL API
-    // ==========================================
-    async function fetchNews() {
-        const newsContainer = document.getElementById('news-container');
+    // Jalankan fungsi-fungsi utama
+    fetchNews();
+    initAnnouncementSlider();
+    initMobileMenu();
 
-        try {
-            const response = await fetch('/api/berita');
-            
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-            
-            const data = await response.json();
-            
-            // SIMPAN DATA KE VARIABLE GLOBAL SUPAYA BOLEH DIBACA OLEH MODAL
-            allNewsData = data; 
+});
 
-            if (!data || data.length === 0) {
-                newsContainer.innerHTML = `
-                    <div class="col-span-3 text-center py-10 bg-white rounded-lg shadow">
-                        <p class="text-gray-500">Tiada berita terkini.</p>
-                    </div>
-                `;
-                return;
-            }
+// ==========================================
+// 1. FUNGSI BERITA TERKINI (DARI API)
+// ==========================================
+async function fetchNews() {
+    const newsContainer = document.getElementById('news-container');
 
-            newsContainer.innerHTML = '';
+    // Jika container tiada dalam page (contoh: page galeri), jangan buat apa-apa
+    if (!newsContainer) return;
 
-            data.forEach(item => {
-                const dateObj = new Date(item.date);
-                const dateStr = dateObj.toLocaleDateString('ms-MY', {
-                    day: 'numeric', month: 'short', year: 'numeric'
-                });
+    try {
+        // Panggil API Vercel
+        const response = await fetch('/api/berita');
+        
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        
+        const data = await response.json();
+        
+        // Simpan data ke variable global
+        allNewsData = data; 
 
-                const imgUrl = item.image_url || 'https://placehold.co/400x250/004D40/FFF?text=Berita+SRA';
-
-                // PERUBAHAN DI SINI:
-                // Kita tukar <a href> kepada <button onclick="openModal(...)">
-                // Kita pass ID berita tersebut ke function openModal
-                
-                const html = `
-                <article class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition duration-300 flex flex-col h-full">
-                    <img src="${imgUrl}" alt="${item.title}" class="w-full h-48 object-cover">
-                    <div class="p-6 flex flex-col flex-grow">
-                        <span class="text-xs font-bold text-sra-accent uppercase tracking-wider">Terkini</span>
-                        <h3 class="text-xl font-bold text-gray-800 mt-2 mb-3 leading-tight">${item.title}</h3>
-                        
-                        <!-- line-clamp-3 memotong teks panjang untuk preview -->
-                        <p class="text-gray-600 text-sm mb-4 line-clamp-3 flex-grow">
-                            ${item.content}
-                        </p>
-                        
-                        <div class="flex justify-between items-center text-xs text-gray-400 border-t pt-4 mt-auto">
-                            <span><i class="far fa-calendar mr-1"></i> ${dateStr}</span>
-                            
-                            <!-- BUTANG BACA LAGI -->
-                            <button onclick="openModal(${item.id})" class="text-sra-primary font-bold hover:text-sra-accent transition cursor-pointer focus:outline-none">
-                                Baca Lagi &rarr;
-                            </button>
-                        </div>
-                    </div>
-                </article>
-                `;
-                newsContainer.innerHTML += html;
-            });
-
-        } catch (err) {
-            console.error('Ralat:', err);
+        // Jika tiada data
+        if (!data || data.length === 0) {
             newsContainer.innerHTML = `
-                <div class="col-span-3 text-center text-red-500 py-4">
-                    Gagal memuat turun berita.
+                <div class="col-span-3 text-center py-10 bg-white rounded-lg shadow border border-gray-100">
+                    <p class="text-gray-500">Tiada berita terkini untuk dipaparkan.</p>
                 </div>
             `;
+            return;
         }
+
+        // Kosongkan loading spinner
+        newsContainer.innerHTML = '';
+
+        // Generate HTML untuk setiap berita
+        data.forEach(item => {
+            // Format Tarikh (12 Dis 2025)
+            const dateObj = new Date(item.date);
+            const dateStr = dateObj.toLocaleDateString('ms-MY', {
+                day: 'numeric', month: 'short', year: 'numeric'
+            });
+
+            // Gambar Fallback jika tiada
+            const imgUrl = item.image_url || 'https://placehold.co/400x250/004D40/FFF?text=Berita+Rasmi';
+
+            const html = `
+            <article class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition duration-300 flex flex-col h-full border border-gray-100">
+                <img src="${imgUrl}" alt="${item.title}" class="w-full h-48 object-cover">
+                <div class="p-6 flex flex-col flex-grow">
+                    <span class="text-xs font-bold text-sra-accent uppercase tracking-wider mb-1">Terkini</span>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3 leading-tight line-clamp-2">${item.title}</h3>
+                    
+                    <!-- line-clamp-3: Potong teks jika terlalu panjang -->
+                    <p class="text-gray-600 text-sm mb-4 line-clamp-3 flex-grow">
+                        ${item.content}
+                    </p>
+                    
+                    <div class="flex justify-between items-center text-xs text-gray-400 border-t pt-4 mt-auto">
+                        <span><i class="far fa-calendar mr-1"></i> ${dateStr}</span>
+                        
+                        <!-- Butang Buka Modal -->
+                        <button onclick="openModal(${item.id})" class="text-sra-primary font-bold hover:text-sra-accent transition cursor-pointer focus:outline-none flex items-center">
+                            Baca Lagi <i class="fas fa-arrow-right ml-1 text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+            </article>
+            `;
+            newsContainer.innerHTML += html;
+        });
+
+    } catch (err) {
+        console.error('Ralat mengambil berita:', err);
+        newsContainer.innerHTML = `
+            <div class="col-span-3 text-center text-red-500 py-10 bg-red-50 rounded border border-red-100">
+                <p class="font-bold mb-1">Gagal memuat turun berita.</p>
+                <p class="text-sm">Sila pastikan sambungan internet anda baik.</p>
+            </div>
+        `;
+    }
+}
+
+// ==========================================
+// 2. FUNGSI PENGUMUMAN (SLIDER DARI DB)
+// ==========================================
+async function initAnnouncementSlider() {
+    const sliderElement = document.getElementById('announcement-slider');
+    
+    if (!sliderElement) return;
+
+    let announcements = [];
+
+    try {
+        // Tarik data dari API Pengumuman
+        const res = await fetch('/api/pengumuman');
+        
+        if (res.ok) {
+            const data = await res.json();
+            // Ambil teks sahaja dari object data
+            if (data && data.length > 0) {
+                announcements = data.map(item => item.text);
+            }
+        }
+    } catch (err) {
+        console.error('Gagal tarik pengumuman:', err);
     }
 
-    fetchNews();
+    // Fallback jika DB kosong atau API error
+    if (announcements.length === 0) {
+        announcements = ["Selamat Datang ke Laman Web Rasmi SRATKR"];
+    }
 
-    // ==========================================
-    // 2. UI LOGIC (MENU & SLIDER) - SAMA SEPERTI DULU
-    // ==========================================
+    // Mula Animasi Slider
+    let currentIndex = 0;
+    
+    // Set teks pertama
+    sliderElement.innerText = announcements[0];
+
+    // Hanya buat loop jika ada lebih dari 1 pengumuman
+    if (announcements.length > 1) {
+        setInterval(() => {
+            sliderElement.style.opacity = 0; // Fade out
+            
+            setTimeout(() => {
+                currentIndex = (currentIndex + 1) % announcements.length;
+                sliderElement.innerText = announcements[currentIndex];
+                sliderElement.style.opacity = 1; // Fade in
+            }, 500); // Tunggu CSS transition (0.5s)
+            
+        }, 5000); // Tukar setiap 5 saat
+    }
+}
+
+// ==========================================
+// 3. FUNGSI MOBILE MENU
+// ==========================================
+function initMobileMenu() {
     const mobileBtn = document.getElementById('mobile-menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
 
     if (mobileBtn && mobileMenu) {
         mobileBtn.addEventListener('click', () => {
             mobileMenu.classList.toggle('hidden');
+            
+            // Tukar ikon hamburger ke 'X' (Optional UI polish)
+            const icon = mobileBtn.querySelector('i');
+            if (mobileMenu.classList.contains('hidden')) {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            } else {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            }
         });
     }
-
-    const sliderElement = document.getElementById('announcement-slider');
-    const announcements = [
-        "Pendaftaran Murid Tahun 1 Sesi 2025 Kini Dibuka!",
-        "Hari Sukan Sekolah akan diadakan pada 25 Mei 2025.",
-        "Sila jelaskan yuran PIBG sebelum akhir bulan ini."
-    ];
-    let currentIndex = 0;
-
-    if (sliderElement) {
-        sliderElement.innerText = announcements[0];
-        setInterval(() => {
-            sliderElement.style.opacity = 0;
-            setTimeout(() => {
-                currentIndex = (currentIndex + 1) % announcements.length;
-                sliderElement.innerText = announcements[currentIndex];
-                sliderElement.style.opacity = 1;
-            }, 500);
-        }, 4000);
-    }
-});
+}
 
 // ==========================================
-// 3. FUNGSI MODAL (DILUAR DOMContentLoaded)
+// 4. FUNGSI MODAL POPUP (GLOBAL SCOPE)
 // ==========================================
-// Kita letak di luar supaya HTML onclick="openModal()" boleh nampak function ini
+// Diletakkan di luar DOMContentLoaded supaya boleh dipanggil oleh 'onclick' HTML
 
 function openModal(id) {
-    // 1. Cari berita berdasarkan ID dari variable global allNewsData
+    // Cari berita spesifik dalam array global
     const newsItem = allNewsData.find(item => item.id == id);
     
     if (!newsItem) return;
 
-    // 2. Isi data ke dalam Modal HTML
+    // Format tarikh
     const dateObj = new Date(newsItem.date);
     const dateStr = dateObj.toLocaleDateString('ms-MY', { day: 'numeric', month: 'long', year: 'numeric' });
+    
+    // Gambar default
     const imgUrl = newsItem.image_url || 'https://placehold.co/600x400/004D40/FFF?text=Berita+SRA';
 
+    // Masukkan data ke dalam elemen HTML Modal
     document.getElementById('modal-title').innerText = newsItem.title;
-    document.getElementById('modal-content').innerText = newsItem.content; // textContent mengekalkan formatting asas
-    document.getElementById('modal-date').innerHTML = `<i class="far fa-calendar-alt"></i> ${dateStr}`;
+    
+    // Gunakan innerText atau textContent untuk keselamatan (elak XSS), 
+    // tapi CSS 'whitespace-pre-wrap' akan kekalkan format perenggan.
+    document.getElementById('modal-content').innerText = newsItem.content; 
+    
+    document.getElementById('modal-date').innerHTML = `<i class="far fa-calendar-alt mr-2"></i> ${dateStr}`;
     document.getElementById('modal-image').src = imgUrl;
 
-    // 3. Tunjuk Modal (Buang class hidden)
+    // Tunjuk Modal
     const modal = document.getElementById('news-modal');
     modal.classList.remove('hidden');
     
-    // Halang body dari scroll masa modal buka
+    // Halang body dari scroll
     document.body.style.overflow = 'hidden';
 }
 
 function closeModal() {
-    // 1. Sorok Modal
+    // Sorok Modal
     const modal = document.getElementById('news-modal');
     modal.classList.add('hidden');
     
-    // 2. Benarkan body scroll semula
+    // Benarkan body scroll semula
     document.body.style.overflow = 'auto';
+}
+
+// Tutup modal jika klik di luar kotak (Backdrop click)
+window.onclick = function(event) {
+    const modal = document.getElementById('news-modal');
+    // Cek jika yang diklik adalah background gelap (bukan content modal)
+    // Note: Kita ada div backdrop asing sebenarnya, tapi ini extra safety.
+    if (event.target == modal) {
+        closeModal();
+    }
 }
