@@ -14,7 +14,7 @@ export default async function handler(req, res) {
         // Ambil pengumuman yang column 'active' = true sahaja
         const { data, error } = await supabase
             .from('announcements')
-            .select('text')
+            .select('pengumuman')
             .eq('active', true)
             .order('created_at', { ascending: false });
 
