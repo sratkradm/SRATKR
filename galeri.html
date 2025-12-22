@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeri Sekolah - SRA Taman Kajang Raya</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sra: { primary: '#004D40', accent: '#FFC107', light: '#F5F5F5', dark: '#1F2937' }
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-50 font-sans text-gray-800 flex flex-col min-h-screen">
+
+    <!-- HEADER RINGKAS -->
+    <header class="bg-sra-primary text-white sticky top-0 z-50 shadow-lg border-b-4 border-sra-accent">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-sra-primary font-bold border-2 border-sra-accent">
+                    <i class="fas fa-mosque"></i>
+                </div>
+                <h1 class="text-md font-bold uppercase tracking-wide">SRA TKR</h1>
+            </a>
+            <a href="index.html" class="text-sm font-bold hover:text-sra-accent"><i class="fas fa-arrow-left mr-2"></i> Utama</a>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-grow container mx-auto px-4 py-12">
+        
+        <!-- Tajuk Halaman -->
+        <div class="text-center mb-10">
+            <h1 class="text-3xl font-bold text-sra-primary">Galeri Foto</h1>
+            <p class="text-gray-600 mt-2">Koleksi kenangan dan aktiviti sekolah</p>
+        </div>
+
+        <!-- VIEW 1: SENARAI ALBUM (Folder) -->
+        <div id="albums-view">
+            <div id="albums-container" class="grid md:grid-cols-3 gap-8">
+                <!-- Loading Spinner -->
+                <div class="col-span-3 text-center py-20">
+                    <i class="fas fa-spinner fa-spin fa-3x text-sra-primary"></i>
+                    <p class="mt-4 text-gray-500">Memuatkan album...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 2: DALAM ALBUM (Grid Gambar) -->
+        <div id="single-album-view" class="hidden">
+            <!-- Butang Back -->
+            <button onclick="showAlbumsView()" class="mb-6 flex items-center text-sra-primary font-bold hover:text-sra-accent transition">
+                <i class="fas fa-arrow-left mr-2"></i> Kembali ke Senarai Album
+            </button>
+
+            <h2 id="album-title-display" class="text-2xl font-bold text-gray-800 mb-6 border-l-4 border-sra-accent pl-4">
+                <!-- Tajuk Album -->
+            </h2>
+
+            <div id="photos-container" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <!-- Gambar akan masuk sini -->
+            </div>
+        </div>
+
+    </main>
+
+    <!-- LIGHTBOX (POPUP GAMBAR FULLSCREEN) -->
+    <div id="lightbox" class="fixed inset-0 z-[100] hidden bg-black bg-opacity-95 flex items-center justify-center" onclick="closeLightbox()">
+        <button class="absolute top-5 right-5 text-white text-4xl hover:text-gray-300">&times;</button>
+        <img id="lightbox-img" src="" class="max-h-[90vh] max-w-[90vw] object-contain shadow-2xl border-4 border-white rounded">
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-sra-primary text-gray-100 border-t-4 border-sra-accent py-6 text-center text-sm">
+        <p>&copy; 2025 SRA Taman Kajang Raya.</p>
+    </footer>
+
+    <!-- SCRIPT KHAS GALERI -->
+    <script>
+        let allAlbums = [];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const container = document.getElementById('albums-container');
+
+            try {
+                // Fetch Data dari API
+                const res = await fetch('/api/gallery');
+                const data = await res.json();
+                allAlbums = data;
+
+                if (!data || data.length === 0) {
+                    container.innerHTML = '<p class="col-span-3 text-center">Tiada album dijumpai.</p>';
+                    return;
+                }
+
+                // Render Album Cards
+                container.innerHTML = '';
+                data.forEach(album => {
+                    const dateStr = new Date(album.event_date).toLocaleDateString('ms-MY', { year: 'numeric', month: 'long' });
+                    // Kira jumlah gambar dalam array JSONB
+                    const count = album.images ? album.images.length : 0; 
+
+                    const html = `
+                    <div onclick="openAlbum(${album.id})" class="group cursor-pointer bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl hover:-translate-y-1 transition duration-300">
+                        <div class="relative h-56 overflow-hidden">
+                            <img src="${album.cover_image}" alt="${album.title}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                            <div class="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-10 transition"></div>
+                            <div class="absolute bottom-2 right-2 bg-black bg-opacity-60 text-white text-xs px-2 py-1 rounded">
+                                <i class="fas fa-images mr-1"></i> ${count} Foto
+                            </div>
+                        </div>
+                        <div class="p-5">
+                            <h3 class="text-lg font-bold text-gray-800 mb-1 group-hover:text-sra-primary">${album.title}</h3>
+                            <p class="text-sm text-gray-500"><i class="far fa-calendar-alt mr-1"></i> ${dateStr}</p>
+                        </div>
+                    </div>
+                    `;
+                    container.innerHTML += html;
+                });
+
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = '<p class="col-span-3 text-center text-red-500">Gagal memuat turun galeri.</p>';
+            }
+        });
+
+        // FUNGSI: Buka Album (Tukar View)
+        function openAlbum(id) {
+            const album = allAlbums.find(a => a.id == id);
+            if (!album) return;
+
+            // Sorok Album List, Tunjuk Photo Grid
+            document.getElementById('albums-view').classList.add('hidden');
+            document.getElementById('single-album-view').classList.remove('hidden');
+            
+            // Set Tajuk
+            document.getElementById('album-title-display').innerText = album.title;
+
+            // Render Gambar
+            const photosContainer = document.getElementById('photos-container');
+            photosContainer.innerHTML = '';
+
+            // Cek jika ada images array
+            if (album.images && Array.isArray(album.images)) {
+                album.images.forEach(imgUrl => {
+                    const imgHtml = `
+                    <div class="overflow-hidden rounded-lg shadow cursor-pointer aspect-square" onclick="openLightbox('${imgUrl}')">
+                        <img src="${imgUrl}" class="w-full h-full object-cover hover:scale-110 transition duration-300" loading="lazy">
+                    </div>
+                    `;
+                    photosContainer.innerHTML += imgHtml;
+                });
+            } else {
+                photosContainer.innerHTML = '<p class="text-gray-500">Tiada gambar dalam album ini.</p>';
+            }
+
+            // Scroll ke atas
+            window.scrollTo(0,0);
+        }
+
+        // FUNGSI: Balik ke Senarai Album
+        function showAlbumsView() {
+            document.getElementById('single-album-view').classList.add('hidden');
+            document.getElementById('albums-view').classList.remove('hidden');
+        }
+
+        // FUNGSI: Lightbox (Zoom Gambar)
+        function openLightbox(url) {
+            const lightbox = document.getElementById('lightbox');
+            const img = document.getElementById('lightbox-img');
+            
+            img.src = url;
+            lightbox.classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; // Halang scroll
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.add('hidden');
+            document.body.style.overflow = 'auto'; // Benarkan scroll
+        }
+    </script>
+</body>
+</html>
