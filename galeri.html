@@ -39,8 +39,8 @@
     <!-- MAIN CONTENT -->
     <main class="flex-grow container mx-auto px-4 py-12">
         
-        <!-- Tajuk Halaman -->
-        <div class="text-center mb-10">
+        <!-- Tajuk Halaman Utama -->
+        <div id="main-header" class="text-center mb-10 transition-all duration-300">
             <h1 class="text-3xl font-bold text-sra-primary">Galeri Foto</h1>
             <p class="text-gray-600 mt-2">Koleksi kenangan dan aktiviti sekolah</p>
         </div>
@@ -63,10 +63,27 @@
                 <i class="fas fa-arrow-left mr-2"></i> Kembali ke Senarai Album
             </button>
 
-            <h2 id="album-title-display" class="text-2xl font-bold text-gray-800 mb-6 border-l-4 border-sra-accent pl-4">
+            <!-- CONTAINER HEADER ALBUM -->
+            <div class="bg-white p-6 rounded-lg shadow-sm mb-8 border-l-4 border-sra-accent">
                 <!-- Tajuk Album -->
-            </h2>
+                <h2 id="album-title-display" class="text-2xl md:text-3xl font-bold text-sra-primary mb-3">
+                    <!-- Tajuk Album Masuk Sini -->
+                </h2>
+                
+                <!-- INFO / DESKRIPSI ALBUM (BARU DITAMBAH) -->
+                <div class="flex items-start text-gray-600 space-x-2">
+                    <i class="fas fa-info-circle mt-1 text-sra-accent"></i>
+                    <p id="album-desc-display" class="leading-relaxed">
+                        <!-- Deskripsi Album Masuk Sini -->
+                    </p>
+                </div>
+                
+                <div class="mt-3 text-sm text-gray-400">
+                    <i class="far fa-calendar-alt mr-1"></i> <span id="album-date-display"></span>
+                </div>
+            </div>
 
+            <!-- Grid Gambar -->
             <div id="photos-container" class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <!-- Gambar akan masuk sini -->
             </div>
@@ -76,8 +93,9 @@
 
     <!-- LIGHTBOX (POPUP GAMBAR FULLSCREEN) -->
     <div id="lightbox" class="fixed inset-0 z-[100] hidden bg-black bg-opacity-95 flex items-center justify-center" onclick="closeLightbox()">
-        <button class="absolute top-5 right-5 text-white text-4xl hover:text-gray-300">&times;</button>
+        <button class="absolute top-5 right-5 text-white text-4xl hover:text-gray-300 focus:outline-none">&times;</button>
         <img id="lightbox-img" src="" class="max-h-[90vh] max-w-[90vw] object-contain shadow-2xl border-4 border-white rounded">
+        <p class="absolute bottom-5 text-white text-sm bg-black bg-opacity-50 px-3 py-1 rounded">Klik di mana-mana untuk tutup</p>
     </div>
 
     <!-- FOOTER -->
@@ -99,29 +117,29 @@
                 allAlbums = data;
 
                 if (!data || data.length === 0) {
-                    container.innerHTML = '<p class="col-span-3 text-center">Tiada album dijumpai.</p>';
+                    container.innerHTML = '<div class="col-span-3 text-center py-10 bg-white rounded shadow"><p class="text-gray-500">Tiada album dijumpai.</p></div>';
                     return;
                 }
 
                 // Render Album Cards
                 container.innerHTML = '';
                 data.forEach(album => {
-                    const dateStr = new Date(album.event_date).toLocaleDateString('ms-MY', { year: 'numeric', month: 'long' });
-                    // Kira jumlah gambar dalam array JSONB
+                    const dateStr = new Date(album.event_date).toLocaleDateString('ms-MY', { year: 'numeric', month: 'short' });
                     const count = album.images ? album.images.length : 0; 
+                    const cover = album.cover_image || 'https://placehold.co/400x300/004D40/FFF?text=Tiada+Gambar';
 
                     const html = `
-                    <div onclick="openAlbum(${album.id})" class="group cursor-pointer bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl hover:-translate-y-1 transition duration-300">
+                    <div onclick="openAlbum(${album.id})" class="group cursor-pointer bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl hover:-translate-y-1 transition duration-300 flex flex-col h-full">
                         <div class="relative h-56 overflow-hidden">
-                            <img src="${album.cover_image}" alt="${album.title}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                            <img src="${cover}" alt="${album.title}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
                             <div class="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-10 transition"></div>
                             <div class="absolute bottom-2 right-2 bg-black bg-opacity-60 text-white text-xs px-2 py-1 rounded">
                                 <i class="fas fa-images mr-1"></i> ${count} Foto
                             </div>
                         </div>
-                        <div class="p-5">
-                            <h3 class="text-lg font-bold text-gray-800 mb-1 group-hover:text-sra-primary">${album.title}</h3>
-                            <p class="text-sm text-gray-500"><i class="far fa-calendar-alt mr-1"></i> ${dateStr}</p>
+                        <div class="p-5 flex flex-col flex-grow">
+                            <h3 class="text-lg font-bold text-gray-800 mb-1 group-hover:text-sra-primary line-clamp-2">${album.title}</h3>
+                            <p class="text-sm text-gray-500 mt-auto"><i class="far fa-calendar-alt mr-1"></i> ${dateStr}</p>
                         </div>
                     </div>
                     `;
@@ -139,54 +157,70 @@
             const album = allAlbums.find(a => a.id == id);
             if (!album) return;
 
-            // Sorok Album List, Tunjuk Photo Grid
+            // UI Transitions
             document.getElementById('albums-view').classList.add('hidden');
+            document.getElementById('main-header').classList.add('hidden'); // Sorok tajuk besar Galeri
             document.getElementById('single-album-view').classList.remove('hidden');
             
-            // Set Tajuk
+            // Set Data ke UI
             document.getElementById('album-title-display').innerText = album.title;
+            
+            // Masukkan Deskripsi (Jika ada, jika tiada letak tanda -)
+            const descElement = document.getElementById('album-desc-display');
+            if (album.description) {
+                descElement.innerText = album.description;
+                descElement.parentElement.classList.remove('hidden'); // Tunjuk container info
+            } else {
+                descElement.parentElement.classList.add('hidden'); // Sorok jika tiada info
+            }
+
+            // Set Tarikh
+            const dateStr = new Date(album.event_date).toLocaleDateString('ms-MY', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            document.getElementById('album-date-display').innerText = dateStr;
 
             // Render Gambar
             const photosContainer = document.getElementById('photos-container');
             photosContainer.innerHTML = '';
 
-            // Cek jika ada images array
-            if (album.images && Array.isArray(album.images)) {
+            if (album.images && Array.isArray(album.images) && album.images.length > 0) {
                 album.images.forEach(imgUrl => {
                     const imgHtml = `
-                    <div class="overflow-hidden rounded-lg shadow cursor-pointer aspect-square" onclick="openLightbox('${imgUrl}')">
-                        <img src="${imgUrl}" class="w-full h-full object-cover hover:scale-110 transition duration-300" loading="lazy">
+                    <div class="overflow-hidden rounded-lg shadow-sm cursor-pointer aspect-square relative group" onclick="openLightbox('${imgUrl}')">
+                        <img src="${imgUrl}" class="w-full h-full object-cover transition duration-300 group-hover:scale-105" loading="lazy">
+                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition flex items-center justify-center">
+                            <i class="fas fa-search-plus text-white opacity-0 group-hover:opacity-100 text-2xl drop-shadow-md"></i>
+                        </div>
                     </div>
                     `;
                     photosContainer.innerHTML += imgHtml;
                 });
             } else {
-                photosContainer.innerHTML = '<p class="text-gray-500">Tiada gambar dalam album ini.</p>';
+                photosContainer.innerHTML = '<div class="col-span-4 text-center py-10 text-gray-500 bg-gray-100 rounded">Tiada gambar dimuat naik dalam album ini.</div>';
             }
 
-            // Scroll ke atas
             window.scrollTo(0,0);
         }
 
         // FUNGSI: Balik ke Senarai Album
         function showAlbumsView() {
             document.getElementById('single-album-view').classList.add('hidden');
+            document.getElementById('main-header').classList.remove('hidden'); // Tunjuk balik tajuk besar
             document.getElementById('albums-view').classList.remove('hidden');
+            window.scrollTo(0,0);
         }
 
-        // FUNGSI: Lightbox (Zoom Gambar)
+        // FUNGSI: Lightbox
         function openLightbox(url) {
             const lightbox = document.getElementById('lightbox');
             const img = document.getElementById('lightbox-img');
-            
             img.src = url;
             lightbox.classList.remove('hidden');
-            document.body.style.overflow = 'hidden'; // Halang scroll
+            document.body.style.overflow = 'hidden'; 
         }
 
         function closeLightbox() {
             document.getElementById('lightbox').classList.add('hidden');
-            document.body.style.overflow = 'auto'; // Benarkan scroll
+            document.body.style.overflow = 'auto';
         }
     </script>
 </body>
