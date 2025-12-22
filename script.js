@@ -112,9 +112,11 @@ async function initAnnouncementSlider() {
         
         if (res.ok) {
             const data = await res.json();
-            // Ambil teks sahaja dari object data
+            
+            // PERUBAHAN DI SINI:
+            // Pastikan kita ambil property 'pengumuman', bukan 'text'
             if (data && data.length > 0) {
-                announcements = data.map(item => item.text);
+                announcements = data.map(item => item.pengumuman); 
             }
         }
     } catch (err) {
@@ -126,24 +128,19 @@ async function initAnnouncementSlider() {
         announcements = ["Selamat Datang ke Laman Web Rasmi SRATKR"];
     }
 
-    // Mula Animasi Slider
+    // ... kod selebihnya sama (animasi slider) ...
     let currentIndex = 0;
-    
-    // Set teks pertama
     sliderElement.innerText = announcements[0];
 
-    // Hanya buat loop jika ada lebih dari 1 pengumuman
     if (announcements.length > 1) {
         setInterval(() => {
-            sliderElement.style.opacity = 0; // Fade out
-            
+            sliderElement.style.opacity = 0;
             setTimeout(() => {
                 currentIndex = (currentIndex + 1) % announcements.length;
                 sliderElement.innerText = announcements[currentIndex];
-                sliderElement.style.opacity = 1; // Fade in
-            }, 500); // Tunggu CSS transition (0.5s)
-            
-        }, 5000); // Tukar setiap 5 saat
+                sliderElement.style.opacity = 1;
+            }, 500);
+        }, 5000);
     }
 }
 
