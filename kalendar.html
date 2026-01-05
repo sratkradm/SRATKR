@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- GANTIKAN DENGAN URL LOGO ANDA -->
+    <!-- URL LOGO JAIS -->
     <link rel="icon" type="image/png" href="https://kbwljjyzlmaclcrlmptg.supabase.co/storage/v1/object/public/images/jais.png"> 
     <title>Takwim Persekolahan - SRA Taman Kajang Raya</title>
     
@@ -48,69 +48,78 @@
             font-size: 0.9rem;
         }
 
-        /* --- CSS KHAS UNTUK PRINT PDF (DIKEMASKINI) --- */
+        /* --- CSS KHAS UNTUK PRINT PDF (FIX BLANK PAGE) --- */
         @media print {
             @page {
                 margin: 1cm;
                 size: A4 portrait;
             }
 
-            /* Sembunyikan semua elemen asal website */
-            body > * {
+            /* 1. Sembunyikan Header, Main, Footer secara spesifik */
+            header, main, footer, .no-print {
                 display: none !important;
             }
 
-            /* Jadikan Modal sebagai satu-satunya elemen yang wujud */
-            #summary-modal {
-                display: block !important;
-                position: static !important;
-                background: white;
-                width: 100% !important;
+            /* 2. Reset Body */
+            body {
+                background-color: white !important;
                 height: auto !important;
                 overflow: visible !important;
-                z-index: 9999;
-                inset: 0 !important;
             }
 
-            #summary-modal .relative,
-            #summary-modal .flex,
-            #summary-modal .overflow-y-auto {
-                position: static !important;
-                display: block !important;
-                overflow: visible !important;
+            /* 3. Paksa Modal Muncul & Reset Posisi */
+            #summary-modal {
+                display: block !important; /* Override class hidden */
+                position: relative !important; /* Tukar dari fixed ke relative */
+                inset: auto !important;
+                width: 100% !important;
                 height: auto !important;
+                z-index: 9999;
+                overflow: visible !important;
+            }
+
+            /* 4. Sembunyikan Backdrop Gelap (Child Pertama) */
+            #summary-modal > div:first-child {
+                display: none !important;
+            }
+
+            /* 5. Reset Container Dalaman Modal */
+            #summary-modal .flex, 
+            #summary-modal .relative {
+                display: block !important;
+                position: static !important;
                 width: 100% !important;
                 max-width: 100% !important;
-                margin: 0 !important;
-                padding: 0 !important;
                 box-shadow: none !important;
                 transform: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
             }
 
-            /* 1. PEMBETULAN: Sembunyikan Header Hijau Sepenuhnya */
+            /* 6. Sembunyikan Header Hijau Modal */
             .modal-header-bar {
                 display: none !important;
-                height: 0 !important;
-                visibility: hidden !important;
             }
 
-            /* Paparkan Header Table pada setiap page baru */
+            /* 7. Tunjukkan Tajuk Khas Print */
+            .print-only-header {
+                display: block !important;
+                text-align: center;
+                margin-bottom: 20px;
+            }
+
+            /* 8. Format Table */
+            .overflow-y-auto {
+                overflow: visible !important;
+                height: auto !important;
+            }
             thead {
                 display: table-header-group;
             }
-            
-            /* 2. PEMBETULAN: Header Table Align Center */
-            th {
-                text-align: center !important;
-            }
-
-            /* Pastikan row tidak terpotong */
             tr {
                 break-inside: avoid;
                 page-break-inside: avoid;
             }
-
-            /* Style Table untuk Print */
             table {
                 width: 100% !important;
                 border-collapse: collapse;
@@ -121,8 +130,8 @@
                 padding: 8px !important;
                 color: #000 !important;
             }
-            
-            /* Paksa browser cetak warna background */
+
+            /* 9. Paksa Warna Background Dicetak */
             .bg-red-100 { background-color: #fee2e2 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .bg-yellow-100 { background-color: #fef9c3 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .bg-green-100 { background-color: #dcfce7 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -169,7 +178,7 @@
                 </button>
             </div>
 
-            <!-- Legend / Petunjuk Warna -->
+            <!-- Legend -->
             <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 px-6 py-4 text-xs border-b bg-white">
                 <div class="flex items-center"><span class="w-3 h-3 rounded-full bg-red-100 border border-red-500 mr-2"></span> Cuti</div>
                 <div class="flex items-center"><span class="w-3 h-3 rounded-full bg-yellow-100 border border-yellow-500 mr-2"></span> Peperiksaan</div>
@@ -190,10 +199,9 @@
                 <div class="calendar-day-header">KHAMIS</div>
                 <div class="calendar-day-header">JUMAAT</div>
                 <div class="calendar-day-header">SABTU</div>
-                <!-- Tarikh dijana oleh JS -->
             </div>
             
-            <!-- Butang Buka Modal Summary -->
+            <!-- Butang Summary -->
             <div class="p-4 text-center border-t bg-gray-50">
                 <button onclick="openSummaryModal()" class="text-sra-primary font-bold hover:underline">
                     <i class="fas fa-list-ul mr-2"></i> Lihat Senarai Penuh Aktiviti
@@ -201,26 +209,23 @@
             </div>
         </div>
 
-        <!-- VIEW 2: MOBILE ONLY (SENARAI LIST) -->
+        <!-- VIEW 2: MOBILE ONLY (LIST) -->
         <div id="mobile-list-view" class="md:hidden">
             <div class="bg-white rounded-lg shadow-lg overflow-hidden border-t-4 border-sra-primary">
                 <div class="p-4 bg-gray-50 border-b flex justify-between items-center">
                     <h2 class="font-bold text-lg text-gray-800"><i class="fas fa-calendar-alt mr-2 text-sra-primary"></i> Aktiviti Tahunan</h2>
                 </div>
-                
                 <div id="mobile-list-container" class="divide-y divide-gray-100">
-                    <div class="p-8 text-center text-gray-500">
-                        <i class="fas fa-spinner fa-spin fa-2x mb-3"></i><br>Memuatkan jadual...
-                    </div>
+                    <div class="p-8 text-center text-gray-500"><i class="fas fa-spinner fa-spin fa-2x mb-3"></i><br>Memuatkan jadual...</div>
                 </div>
             </div>
         </div>
 
     </main>
 
-    <!-- MODAL SUMMARY (UNTUK DESKTOP TABLE VIEW & PRINT) -->
+    <!-- MODAL SUMMARY -->
     <div id="summary-modal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <!-- Backdrop -->
+        <!-- Backdrop (Akan hidden masa print) -->
         <div class="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity backdrop-blur-sm no-print" onclick="closeSummaryModal()"></div>
         
         <!-- Modal Panel -->
@@ -228,8 +233,7 @@
             <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
                 <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-6xl max-h-[90vh] flex flex-col">
                     
-                    <!-- HEADER MODAL (Dikemaskini dengan class 'modal-header-bar') -->
-                    <!-- Class 'no-print' di sini mungkin tidak cukup, jadi CSS 'modal-header-bar' akan memaksa hide -->
+                    <!-- Header Modal (Hidden masa Print) -->
                     <div class="modal-header-bar bg-sra-primary px-6 py-4 flex justify-between items-center sticky top-0 z-20">
                         <h3 class="text-lg font-bold text-white">Senarai Penuh Aktiviti</h3>
                         <div class="flex gap-3">
@@ -242,8 +246,8 @@
                         </div>
                     </div>
 
-                    <!-- Tajuk Khas Untuk Print (Hidden by default, Show on Print) -->
-                    <div class="hidden print:block text-center p-6 border-b mb-4">
+                    <!-- Header Khas Untuk Print (Show masa Print shj) -->
+                    <div class="print-only-header hidden">
                         <h1 class="text-3xl font-bold text-black mb-2">Takwim Persekolahan SRA Taman Kajang Raya</h1>
                         <p class="text-sm text-gray-600 uppercase tracking-widest">Jadual Acara Tahunan</p>
                     </div>
@@ -252,7 +256,6 @@
                         <table class="w-full text-left border-collapse">
                             <thead>
                                 <tr class="bg-gray-100 text-gray-700 text-sm uppercase">
-                                    <!-- 2. Header Table Align Center -->
                                     <th class="p-3 border-b font-bold w-[20%] text-center">Tarikh</th>
                                     <th class="p-3 border-b font-bold w-[15%] text-center">Tempoh</th>
                                     <th class="p-3 border-b font-bold w-[45%] text-center">Acara</th>
@@ -260,7 +263,7 @@
                                 </tr>
                             </thead>
                             <tbody id="summary-table-body" class="text-sm">
-                                <!-- Table rows generated by JS -->
+                                <!-- Table Rows -->
                             </tbody>
                         </table>
                     </div>
@@ -284,19 +287,14 @@
                 const res = await fetch('/api/calendar');
                 const data = await res.json();
                 allEvents = data;
-                
                 renderCalendar();      
                 renderMobileList();    
-            } catch (err) {
-                console.error("Gagal ambil event:", err);
-            }
+            } catch (err) { console.error(err); }
         });
 
-        // --- Helper: Warna Kategori ---
         function getCategoryStyle(category) {
             const cat = category ? category.toLowerCase() : '';
             let style = { css: 'bg-gray-100 text-gray-800 border-gray-200', label: 'Lain-lain' };
-
             if (cat === 'cuti') style = { css: 'bg-red-100 text-red-800 border-red-200', label: 'Cuti' };
             else if (cat === 'exam' || cat === 'peperiksaan') style = { css: 'bg-yellow-100 text-yellow-800 border-yellow-200', label: 'Peperiksaan' };
             else if (cat === 'program') style = { css: 'bg-green-100 text-green-800 border-green-200', label: 'Program' };
@@ -305,15 +303,12 @@
             else if (cat === 'psra') style = { css: 'bg-indigo-100 text-indigo-800 border-indigo-200', label: 'PSRA' };
             else if (cat === 'perayaan') style = { css: 'bg-orange-100 text-orange-800 border-orange-200', label: 'Perayaan' };
             else if (cat === 'cuti khas') style = { css: 'bg-cyan-100 text-cyan-800 border-cyan-200', label: 'Cuti Khas' };
-
             return style;
         }
 
-        // --- 1. RENDER KALENDAR KOTAK (DESKTOP) ---
         function renderCalendar() {
             const monthYearEl = document.getElementById('current-month-year');
             const calendarBody = document.getElementById('calendar-body');
-            
             const monthName = currentDate.toLocaleDateString('ms-MY', { month: 'long', year: 'numeric' });
             monthYearEl.innerText = monthName;
 
@@ -334,12 +329,9 @@
                 const dayDiv = document.createElement('div');
                 dayDiv.classList.add('calendar-day', 'hover:bg-gray-50', 'transition');
                 dayDiv.innerHTML = `<span class="text-gray-700 font-semibold text-sm block mb-1">${day}</span>`;
-
-                const currentDayStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                 
-                const daysEvents = allEvents.filter(event => {
-                    return currentDayStr >= event.start_date && currentDayStr <= event.end_date;
-                });
+                const currentDayStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const daysEvents = allEvents.filter(event => currentDayStr >= event.start_date && currentDayStr <= event.end_date);
 
                 daysEvents.forEach(evt => {
                     const style = getCategoryStyle(evt.category);
@@ -350,7 +342,6 @@
                     eventEl.onclick = () => alert(`${evt.title}\n\nInfo: ${evt.description || '-'}`);
                     dayDiv.appendChild(eventEl);
                 });
-
                 calendarBody.appendChild(dayDiv);
             }
         }
@@ -360,15 +351,10 @@
             renderCalendar();
         }
 
-        // --- 2. RENDER LIST (MOBILE) ---
         function renderMobileList() {
             const container = document.getElementById('mobile-list-container');
             container.innerHTML = '';
-
-            if (allEvents.length === 0) {
-                container.innerHTML = '<div class="p-6 text-center text-gray-500">Tiada aktiviti dijadualkan.</div>';
-                return;
-            }
+            if (allEvents.length === 0) { container.innerHTML = '<div class="p-6 text-center text-gray-500">Tiada aktiviti dijadualkan.</div>'; return; }
 
             const sortedEvents = allEvents.sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
 
@@ -377,16 +363,11 @@
                 const d2 = new Date(evt.end_date);
                 const dateStr1 = d1.toLocaleDateString('ms-MY', { day: 'numeric', month: 'short' });
                 const dateStr2 = d2.toLocaleDateString('ms-MY', { day: 'numeric', month: 'short' });
-                
                 let finalDate = dateStr1;
-                if (evt.start_date !== evt.end_date) {
-                    finalDate = `${dateStr1} - ${dateStr2}`;
-                }
+                if (evt.start_date !== evt.end_date) finalDate = `${dateStr1} - ${dateStr2}`;
 
                 const style = getCategoryStyle(evt.category);
-
-                const html = `
-                <div class="p-4 hover:bg-gray-50 transition flex gap-3 border-b border-gray-100">
+                const html = `<div class="p-4 hover:bg-gray-50 transition flex gap-3 border-b border-gray-100">
                     <div class="flex-shrink-0 w-24 text-center border-r pr-3 flex flex-col justify-center">
                         <span class="block text-sm font-bold text-gray-800 leading-tight">${finalDate}</span>
                         <span class="block text-xs text-gray-500 uppercase mt-1">${d1.getFullYear()}</span>
@@ -396,13 +377,11 @@
                         <h3 class="font-bold text-gray-800 text-sm leading-tight mb-1">${evt.title}</h3>
                         ${evt.description ? `<p class="text-xs text-gray-500 line-clamp-2">${evt.description}</p>` : ''}
                     </div>
-                </div>
-                `;
+                </div>`;
                 container.innerHTML += html;
             });
         }
 
-        // --- 3. MODAL SUMMARY (TABLE VIEW) ---
         function openSummaryModal() {
             const tbody = document.getElementById('summary-table-body');
             tbody.innerHTML = '';
@@ -414,7 +393,7 @@
                 const d2 = new Date(evt.end_date);
                 const dateStr1 = d1.toLocaleDateString('ms-MY', { day: 'numeric', month: 'short', year: 'numeric' });
                 const dateStr2 = d2.toLocaleDateString('ms-MY', { day: 'numeric', month: 'short', year: 'numeric' });
-
+                
                 // Kira Jumlah Hari
                 const oneDay = 24 * 60 * 60 * 1000; 
                 d1.setHours(0,0,0,0);
@@ -423,35 +402,27 @@
 
                 let displayDateHtml = `<span class="font-bold text-gray-700">${dateStr1}</span>`;
                 if (evt.start_date !== evt.end_date) {
-                    displayDateHtml = `
-                        <div class="flex flex-col">
-                            <span class="font-bold text-gray-700">${dateStr1}</span>
-                            <span class="text-xs text-gray-400 font-medium my-0.5">hingga</span>
-                            <span class="font-bold text-gray-700">${dateStr2}</span>
-                        </div>
-                    `;
+                    displayDateHtml = `<div class="flex flex-col"><span class="font-bold text-gray-700">${dateStr1}</span><span class="text-xs text-gray-400 font-medium my-0.5">hingga</span><span class="font-bold text-gray-700">${dateStr2}</span></div>`;
                 }
 
                 const style = getCategoryStyle(evt.category);
 
                 const tr = `
                 <tr class="border-b hover:bg-gray-50 align-top break-inside-avoid">
-                    <td class="p-4 whitespace-nowrap align-middle">
+                    <td class="p-4 whitespace-nowrap align-middle text-center">
                         ${displayDateHtml}
                     </td>
-                    
-                    <!-- 3. PEMBETULAN: TEMPOH TANPA BOX KELABU -->
+                    <!-- COLUMN TEMPOH CLEAN -->
                     <td class="p-4 align-middle text-center whitespace-nowrap">
                         <span class="font-bold text-gray-800 text-base">
                             ${diffDays} Hari
                         </span>
                     </td>
-
                     <td class="p-4 align-middle">
                         <div class="font-bold text-gray-800 text-base">${evt.title}</div>
                         <div class="text-sm text-gray-500 mt-1">${evt.description || ''}</div>
                     </td>
-                    <td class="p-4 align-middle text-right">
+                    <td class="p-4 align-middle text-center">
                         <span class="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase shadow-sm ${style.css}">
                             ${style.label}
                         </span>
@@ -459,7 +430,6 @@
                 </tr>`;
                 tbody.innerHTML += tr;
             });
-
             document.getElementById('summary-modal').classList.remove('hidden');
         }
 
@@ -467,7 +437,6 @@
             document.getElementById('summary-modal').classList.add('hidden');
         }
 
-        // --- 4. PRINT PDF ---
         function printTable() {
             window.print();
         }
