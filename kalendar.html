@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- URL LOGO JAIS -->
     <link rel="icon" type="image/png" href="https://kbwljjyzlmaclcrlmptg.supabase.co/storage/v1/object/public/images/jais.png"> 
     <title>Takwim Persekolahan - SRA Taman Kajang Raya</title>
     
@@ -48,90 +47,94 @@
             font-size: 0.9rem;
         }
 
-        /* --- CSS KHAS UNTUK PRINT PDF (FIX BLANK PAGE) --- */
+        /* --- CSS KHAS UNTUK PRINT PDF (MAJOR FIX) --- */
         @media print {
             @page {
                 margin: 1cm;
                 size: A4 portrait;
             }
 
-            /* 1. Sembunyikan Header, Main, Footer secara spesifik */
-            header, main, footer, .no-print {
+            /* 1. Sembunyikan SEMUA elemen dalam body secara default */
+            body * {
+                visibility: hidden;
+            }
+
+            /* 2. Hanya tunjukkan Modal dan isinya */
+            #summary-modal, #summary-modal * {
+                visibility: visible;
+            }
+
+            /* 3. TETAPI, sembunyikan Header Hijau & Butang dalam modal */
+            #modal-top-bar, #modal-top-bar * {
                 display: none !important;
+                visibility: hidden !important;
+                height: 0 !important;
             }
 
-            /* 2. Reset Body */
-            body {
-                background-color: white !important;
-                height: auto !important;
-                overflow: visible !important;
-            }
-
-            /* 3. Paksa Modal Muncul & Reset Posisi */
+            /* 4. Reset Posisi Modal supaya mengalir ke page 2 */
             #summary-modal {
-                display: block !important; /* Override class hidden */
-                position: relative !important; /* Tukar dari fixed ke relative */
-                inset: auto !important;
+                position: absolute !important;
+                left: 0 !important;
+                top: 0 !important;
                 width: 100% !important;
                 height: auto !important;
-                z-index: 9999;
+                background: white !important;
                 overflow: visible !important;
-            }
-
-            /* 4. Sembunyikan Backdrop Gelap (Child Pertama) */
-            #summary-modal > div:first-child {
-                display: none !important;
+                z-index: 9999;
             }
 
             /* 5. Reset Container Dalaman Modal */
-            #summary-modal .flex, 
-            #summary-modal .relative {
-                display: block !important;
+            #summary-modal .modal-content-wrapper {
                 position: static !important;
+                overflow: visible !important;
+                height: auto !important;
                 width: 100% !important;
                 max-width: 100% !important;
-                box-shadow: none !important;
-                transform: none !important;
                 margin: 0 !important;
                 padding: 0 !important;
+                box-shadow: none !important;
+                transform: none !important;
             }
 
-            /* 6. Sembunyikan Header Hijau Modal */
-            .modal-header-bar {
-                display: none !important;
-            }
-
-            /* 7. Tunjukkan Tajuk Khas Print */
+            /* 6. Tunjuk Header Khas Print */
             .print-only-header {
                 display: block !important;
                 text-align: center;
                 margin-bottom: 20px;
+                visibility: visible !important;
+            }
+            
+            .print-only-header h1 {
+                font-size: 18pt !important;
+                margin-bottom: 5px;
             }
 
-            /* 8. Format Table */
-            .overflow-y-auto {
-                overflow: visible !important;
-                height: auto !important;
+            /* 7. Format Table Print */
+            table {
+                width: 100% !important;
+                border-collapse: collapse;
+                font-size: 10pt !important; /* Font lebih kecil */
             }
+            
             thead {
                 display: table-header-group;
+                background-color: #f3f4f6 !important;
+                -webkit-print-color-adjust: exact;
             }
+            
             tr {
                 break-inside: avoid;
                 page-break-inside: avoid;
             }
-            table {
-                width: 100% !important;
-                border-collapse: collapse;
-                font-size: 11pt;
-            }
+            
             th, td {
                 border: 1px solid #000 !important;
-                padding: 8px !important;
+                padding: 6px !important;
                 color: #000 !important;
+                vertical-align: middle;
             }
 
-            /* 9. Paksa Warna Background Dicetak */
+            /* 8. Warna Badge */
             .bg-red-100 { background-color: #fee2e2 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .bg-yellow-100 { background-color: #fef9c3 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .bg-green-100 { background-color: #dcfce7 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -146,7 +149,7 @@
 <body class="bg-gray-50 font-sans text-gray-800 flex flex-col min-h-screen">
 
     <!-- HEADER -->
-    <header class="bg-sra-primary text-white sticky top-0 z-50 shadow-lg border-b-4 border-sra-accent no-print">
+    <header class="bg-sra-primary text-white sticky top-0 z-50 shadow-lg border-b-4 border-sra-accent">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <a href="/" class="flex items-center space-x-3">
                 <img src="https://kbwljjyzlmaclcrlmptg.supabase.co/storage/v1/object/public/images/jais.png" class="w-10 h-10 rounded-full bg-white border-2 border-sra-accent">
@@ -157,7 +160,7 @@
     </header>
 
     <!-- MAIN CONTENT -->
-    <main class="flex-grow container mx-auto px-4 py-8 no-print">
+    <main class="flex-grow container mx-auto px-4 py-8">
         
         <div class="text-center mb-8">
             <h1 class="text-3xl font-bold text-sra-primary">Takwim Persekolahan</h1>
@@ -201,7 +204,7 @@
                 <div class="calendar-day-header">SABTU</div>
             </div>
             
-            <!-- Butang Summary -->
+            <!-- Butang Buka Modal Summary -->
             <div class="p-4 text-center border-t bg-gray-50">
                 <button onclick="openSummaryModal()" class="text-sra-primary font-bold hover:underline">
                     <i class="fas fa-list-ul mr-2"></i> Lihat Senarai Penuh Aktiviti
@@ -223,18 +226,18 @@
 
     </main>
 
-    <!-- MODAL SUMMARY -->
+    <!-- MODAL SUMMARY (UNTUK DESKTOP TABLE VIEW & PRINT) -->
     <div id="summary-modal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <!-- Backdrop (Akan hidden masa print) -->
-        <div class="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity backdrop-blur-sm no-print" onclick="closeSummaryModal()"></div>
+        <!-- Backdrop -->
+        <div class="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity backdrop-blur-sm" onclick="closeSummaryModal()"></div>
         
-        <!-- Modal Panel -->
-        <div class="fixed inset-0 z-10 overflow-y-auto">
+        <!-- Modal Panel (Tambah class 'modal-content-wrapper' untuk targeting CSS Print) -->
+        <div class="modal-content-wrapper fixed inset-0 z-10 overflow-y-auto">
             <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
                 <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-6xl max-h-[90vh] flex flex-col">
                     
-                    <!-- Header Modal (Hidden masa Print) -->
-                    <div class="modal-header-bar bg-sra-primary px-6 py-4 flex justify-between items-center sticky top-0 z-20">
+                    <!-- HEADER MODAL (Tambah ID 'modal-top-bar' supaya senang hide masa print) -->
+                    <div id="modal-top-bar" class="bg-sra-primary px-6 py-4 flex justify-between items-center sticky top-0 z-20">
                         <h3 class="text-lg font-bold text-white">Senarai Penuh Aktiviti</h3>
                         <div class="flex gap-3">
                             <button onclick="printTable()" class="bg-white text-sra-primary px-3 py-1 rounded text-sm font-bold hover:bg-gray-100">
@@ -246,24 +249,26 @@
                         </div>
                     </div>
 
-                    <!-- Header Khas Untuk Print (Show masa Print shj) -->
+                    <!-- Tajuk Khas Untuk Print (Hidden by default, Show on Print) -->
                     <div class="print-only-header hidden">
-                        <h1 class="text-3xl font-bold text-black mb-2">Takwim Persekolahan SRA Taman Kajang Raya</h1>
-                        <p class="text-sm text-gray-600 uppercase tracking-widest">Jadual Acara Tahunan</p>
+                        <h1 class="text-2xl font-bold text-black mb-1">TAKWIM PERSEKOLAHAN SRA TAMAN KAJANG RAYA</h1>
+                        <p class="text-xs text-gray-600 uppercase tracking-widest mb-4">Jadual Acara Tahunan</p>
                     </div>
 
                     <div class="p-6 overflow-y-auto">
                         <table class="w-full text-left border-collapse">
                             <thead>
                                 <tr class="bg-gray-100 text-gray-700 text-sm uppercase">
-                                    <th class="p-3 border-b font-bold w-[20%] text-center">Tarikh</th>
-                                    <th class="p-3 border-b font-bold w-[15%] text-center">Tempoh</th>
-                                    <th class="p-3 border-b font-bold w-[45%] text-center">Acara</th>
+                                    <!-- HEADER TABLE BARU: Mula, Tamat, Tempoh, Acara, Kategori -->
+                                    <th class="p-3 border-b font-bold w-[12%] text-center">Mula</th>
+                                    <th class="p-3 border-b font-bold w-[12%] text-center">Tamat</th>
+                                    <th class="p-3 border-b font-bold w-[10%] text-center">Tempoh</th>
+                                    <th class="p-3 border-b font-bold w-[46%] text-left pl-4">Acara</th>
                                     <th class="p-3 border-b font-bold w-[20%] text-center">Kategori</th>
                                 </tr>
                             </thead>
                             <tbody id="summary-table-body" class="text-sm">
-                                <!-- Table Rows -->
+                                <!-- Table rows generated by JS -->
                             </tbody>
                         </table>
                     </div>
@@ -273,7 +278,7 @@
     </div>
 
     <!-- FOOTER -->
-    <footer class="bg-sra-primary text-gray-100 border-t-4 border-sra-accent py-6 text-center text-sm no-print">
+    <footer class="bg-sra-primary text-gray-100 border-t-4 border-sra-accent py-6 text-center text-sm">
         <p>&copy; 2025 SRA Taman Kajang Raya.</p>
     </footer>
 
@@ -391,39 +396,48 @@
             sortedEvents.forEach(evt => {
                 const d1 = new Date(evt.start_date);
                 const d2 = new Date(evt.end_date);
+                
+                // Format Tarikh Pendek untuk Table (12 Jan 2026)
                 const dateStr1 = d1.toLocaleDateString('ms-MY', { day: 'numeric', month: 'short', year: 'numeric' });
                 const dateStr2 = d2.toLocaleDateString('ms-MY', { day: 'numeric', month: 'short', year: 'numeric' });
-                
+
                 // Kira Jumlah Hari
                 const oneDay = 24 * 60 * 60 * 1000; 
                 d1.setHours(0,0,0,0);
                 d2.setHours(0,0,0,0);
                 const diffDays = Math.round(Math.abs((d2 - d1) / oneDay)) + 1;
 
-                let displayDateHtml = `<span class="font-bold text-gray-700">${dateStr1}</span>`;
-                if (evt.start_date !== evt.end_date) {
-                    displayDateHtml = `<div class="flex flex-col"><span class="font-bold text-gray-700">${dateStr1}</span><span class="text-xs text-gray-400 font-medium my-0.5">hingga</span><span class="font-bold text-gray-700">${dateStr2}</span></div>`;
-                }
-
                 const style = getCategoryStyle(evt.category);
 
+                // STRUKTUR ROW TABLE BARU (MULA | TAMAT | TEMPOH | ACARA | KATEGORI)
                 const tr = `
                 <tr class="border-b hover:bg-gray-50 align-top break-inside-avoid">
-                    <td class="p-4 whitespace-nowrap align-middle text-center">
-                        ${displayDateHtml}
+                    <!-- MULA -->
+                    <td class="p-3 text-center whitespace-nowrap text-gray-700 font-medium">
+                        ${dateStr1}
                     </td>
-                    <!-- COLUMN TEMPOH CLEAN -->
-                    <td class="p-4 align-middle text-center whitespace-nowrap">
-                        <span class="font-bold text-gray-800 text-base">
+                    
+                    <!-- TAMAT (Jika sama, tunjuk '-') -->
+                    <td class="p-3 text-center whitespace-nowrap text-gray-700 font-medium">
+                        ${evt.start_date !== evt.end_date ? dateStr2 : '-'}
+                    </td>
+
+                    <!-- TEMPOH -->
+                    <td class="p-3 text-center whitespace-nowrap">
+                        <span class="text-gray-600 text-sm font-bold">
                             ${diffDays} Hari
                         </span>
                     </td>
-                    <td class="p-4 align-middle">
-                        <div class="font-bold text-gray-800 text-base">${evt.title}</div>
-                        <div class="text-sm text-gray-500 mt-1">${evt.description || ''}</div>
+
+                    <!-- ACARA -->
+                    <td class="p-3 pl-4 text-left align-middle">
+                        <div class="font-bold text-gray-800 text-base leading-tight">${evt.title}</div>
+                        ${evt.description ? `<div class="text-xs text-gray-500 mt-1">${evt.description}</div>` : ''}
                     </td>
-                    <td class="p-4 align-middle text-center">
-                        <span class="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase shadow-sm ${style.css}">
+
+                    <!-- KATEGORI -->
+                    <td class="p-3 text-center align-middle">
+                        <span class="inline-block px-2 py-1 rounded-full text-[10px] font-bold uppercase border ${style.css.replace('bg-', 'border-').replace('text-', 'text-')} bg-white">
                             ${style.label}
                         </span>
                     </td>
