@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- GANTIKAN DENGAN URL LOGO ANDA -->
-    <link rel="icon" type="image/png" href="URL_LOGO_ANDA"> 
-    <title>Takwim Persekolahan - SRA TKR</title>
+    <!-- 1. FAVICON DIKEMASKINI -->
+    <link rel="icon" type="image/png" href="https://kbwljjyzlmaclcrlmptg.supabase.co/storage/v1/object/public/images/jais.png"> 
+    <title>Takwim Persekolahan - SRA Taman Kajang Raya</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -55,24 +55,24 @@
                 size: A4 portrait;
             }
 
-            /* 1. Sembunyikan semua elemen asal website */
+            /* Sembunyikan semua elemen asal website */
             body > * {
                 display: none !important;
             }
 
-            /* 2. Jadikan Modal sebagai satu-satunya elemen yang wujud dan alirannya normal (static) */
+            /* Jadikan Modal sebagai satu-satunya elemen yang wujud */
             #summary-modal {
                 display: block !important;
-                position: static !important; /* Matikan fixed positioning */
+                position: static !important;
                 background: white;
                 width: 100% !important;
                 height: auto !important;
-                overflow: visible !important; /* Benarkan content melimpah ke page lain */
+                overflow: visible !important;
                 z-index: 9999;
                 inset: 0 !important;
             }
 
-            /* 3. Reset container dalam modal supaya tak ada scrollbar */
+            /* Reset container dalam modal */
             #summary-modal .relative,
             #summary-modal .flex,
             #summary-modal .overflow-y-auto {
@@ -88,35 +88,35 @@
                 transform: none !important;
             }
 
-            /* 4. Paparkan Header Table pada setiap page baru */
+            /* PENTING: Sembunyikan Header Modal (Bar Hijau) & Butang */
+            .modal-header-bar, .no-print {
+                display: none !important;
+            }
+
+            /* Paparkan Header Table pada setiap page baru */
             thead {
                 display: table-header-group;
             }
 
-            /* 5. Pastikan row tidak terpotong di tengah */
+            /* Pastikan row tidak terpotong */
             tr {
                 break-inside: avoid;
                 page-break-inside: avoid;
             }
 
-            /* 6. Sembunyikan butang tutup/print */
-            .no-print {
-                display: none !important;
-            }
-
-            /* 7. Style Table untuk Print (Lebih Kontras) */
+            /* Style Table untuk Print */
             table {
                 width: 100% !important;
                 border-collapse: collapse;
-                font-size: 11pt; /* Saiz font selesa dibaca */
+                font-size: 11pt;
             }
             th, td {
-                border: 1px solid #000 !important; /* Border hitam penuh */
+                border: 1px solid #000 !important;
                 padding: 8px !important;
                 color: #000 !important;
             }
             
-            /* 8. Paksa browser cetak warna background (Badge) */
+            /* Paksa browser cetak warna background */
             .bg-red-100 { background-color: #fee2e2 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .bg-yellow-100 { background-color: #fef9c3 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .bg-green-100 { background-color: #dcfce7 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -134,9 +134,9 @@
     <header class="bg-sra-primary text-white sticky top-0 z-50 shadow-lg border-b-4 border-sra-accent no-print">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <a href="/" class="flex items-center space-x-3">
-                <!-- GANTIKAN URL LOGO -->
-                <img src="URL_LOGO_ANDA" class="w-10 h-10 rounded-full bg-white border-2 border-sra-accent">
-                <h1 class="text-md font-bold uppercase tracking-wide">SRA TKR</h1>
+                <!-- 2. LOGO DAN NAMA SEKOLAH DIKEMASKINI -->
+                <img src="https://kbwljjyzlmaclcrlmptg.supabase.co/storage/v1/object/public/images/jais.png" class="w-10 h-10 rounded-full bg-white border-2 border-sra-accent">
+                <h1 class="text-md font-bold uppercase tracking-wide">SRA TAMAN KAJANG RAYA</h1>
             </a>
             <a href="/" class="text-sm font-bold hover:text-sra-accent"><i class="fas fa-home mr-2"></i> Utama</a>
         </div>
@@ -227,8 +227,9 @@
             <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
                 <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-6xl max-h-[90vh] flex flex-col">
                     
-                    <!-- Header Modal -->
-                    <div class="bg-sra-primary px-6 py-4 flex justify-between items-center sticky top-0 z-20 no-print">
+                    <!-- 3. HEADER MODAL (AKAN DISEMBUNYIKAN BILA PRINT) -->
+                    <!-- Ditambah class 'modal-header-bar' dan 'no-print' -->
+                    <div class="modal-header-bar bg-sra-primary px-6 py-4 flex justify-between items-center sticky top-0 z-20 no-print">
                         <h3 class="text-lg font-bold text-white">Senarai Penuh Aktiviti</h3>
                         <div class="flex gap-3">
                             <button onclick="printTable()" class="bg-white text-sra-primary px-3 py-1 rounded text-sm font-bold hover:bg-gray-100">
@@ -251,7 +252,6 @@
                             <thead>
                                 <tr class="bg-gray-100 text-gray-700 text-sm uppercase">
                                     <th class="p-3 border-b font-bold w-[20%]">Tarikh</th>
-                                    <!-- Column Tempoh Lebar Sikit (15%) -->
                                     <th class="p-3 border-b font-bold w-[15%] text-center">Tempoh</th>
                                     <th class="p-3 border-b font-bold w-[45%]">Acara</th>
                                     <th class="p-3 border-b font-bold w-[20%] text-right">Kategori</th>
@@ -400,7 +400,7 @@
             });
         }
 
-        // --- 3. MODAL SUMMARY (TABLE) ---
+        // --- 3. MODAL SUMMARY (TABLE VIEW) ---
         function openSummaryModal() {
             const tbody = document.getElementById('summary-table-body');
             tbody.innerHTML = '';
@@ -437,9 +437,8 @@
                     <td class="p-4 whitespace-nowrap align-middle">
                         ${displayDateHtml}
                     </td>
-                    <!-- COLUMN TEMPOH: Ditambah whitespace-nowrap -->
                     <td class="p-4 align-middle text-center whitespace-nowrap">
-                        <span class="font-bold text-gray-700 bg-gray-100 px-3 py-1 rounded border border-gray-300 block">
+                        <span class="font-bold text-gray-700 bg-gray-100 px-3 py-1 rounded border border-gray-300 block w-full">
                             ${diffDays} Hari
                         </span>
                     </td>
